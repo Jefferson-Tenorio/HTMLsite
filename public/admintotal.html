@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Total</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fff;
+      color: #111;
+      margin: 0;
+    }
+
+    header {
+      background-color: #1e2720;
+      padding: 0.8rem 1rem;
+    }
+
+    .header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.logo {
+  height: 50px;
+}
+
+nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #a5dd9b;
+}
+
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .top-bar h1 {
+      color: white;
+      font-family: 'Rubik Mono One', sans-serif;
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    .btn-voltar {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: opacity 0.3s;
+    }
+
+    .btn-voltar:hover {
+      opacity: 0.7;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: auto;
+      padding: 2rem 1rem;
+    }
+
+    .painel {
+      margin-bottom: 2rem;
+    }
+
+    .painel h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .box-arrecadado {
+      background-color: #f0f0f0;
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .tabela {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .tabela th, .tabela td {
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .tabela th {
+      background-color: #1e2720;
+      color: white;
+      font-weight: bold;
+    }
+
+    .tabela tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .tabela button {
+      background-color: #c0392b;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .tabela button:hover {
+      background-color: #e74c3c;
+    }
+
+    footer {
+      background-color: #1e2720;
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <img src="pages/style/style/imgs/LOGO.png" alt="Logo do Ministério" class="logo">
+    <nav>
+     <a href="../index.html">INÍCIO</a>
+      <a href="pages/quemsomos.html">QUEM SOMOS</a>
+      <a href="pages/cadrastodoador.html">CADASTRO DOADOR</a>
+      <a href="pages\transparencia.html">TRANSPARÊNCIA</a>
+      <a href="pages/doacao.html">DOAÇÕES</a>
+      <a href="/" class="btn-voltar">Voltar ao site</a>
+
+    </nav>
+  </div>
+</header>
+
+
+  <main class="container">
+    <section class="painel">
+      <h2>Total Arrecadado</h2>
+      <div class="box-arrecadado">
+        <span id="valorTotal">R$ 0,00</span>
+      </div>
+    </section>
+
+    <section class="painel">
+      <h2>Doadores Cadastrados</h2>
+      <table class="tabela">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Telefone</th>
+            <th>E-mail</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaDoadores">
+          <!-- Dados serão inseridos aqui -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Ministério Esperança Viva</p>
+  </footer>
+
+  <script>
+    async function carregarTotal() {
+      const res = await fetch('/valor-arrecadado')
+      const data = await res.json()
+      const total = parseFloat(data.total || 0).toFixed(2)
+      document.getElementById('valorTotal').textContent = `R$ ${total}`.replace('.', ',')
+    }
+
+    async function carregarDoadores() {
+      const res = await fetch('/doadores')
+      const doadores = await res.json()
+      const tbody = document.getElementById('tabelaDoadores')
+      tbody.innerHTML = ''
+
+      doadores.forEach(doador => {
+        const tr = document.createElement('tr')
+        tr.innerHTML = `
+          <td>${doador.nome}</td>
+          <td>${doador.cpf}</td>
+          <td>${doador.telefone}</td>
+          <td>${doador.email}</td>
+          <td><button onclick="removerDoador(${doador.id})">Remover</button></td>
+        `
+        tbody.appendChild(tr)
+      })
+    }
+async function removerDoador(id) {
+  if (!confirm('Deseja realmente remover este doador?')) return
+  await fetch(`/doadores/${id}`, { method: 'DELETE' })
+  carregarDoadores()
+  carregarTotal() // importante para atualizar o total após a exclusão
+}
+
+
+    carregarTotal()
+    carregarDoadores()
+  </script>
+</body>
+</html>
