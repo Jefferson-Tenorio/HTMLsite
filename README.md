@@ -54,13 +54,13 @@ Este projeto tem como objetivo **registrar e organizar os dados de doadores** qu
 
 ```
 /
-├── backend/
-│   ├── db.js
-│   └── index.js
 ├── public/
+|   ├── pages/
+|         └── style/
 │   ├── index.html
-│   └── style/
-│       └── cadrastodoador2.css
+|   ├── admintotal.html
+├── db.js
+├── server.js   
 └── doadores.db
 ```
 
